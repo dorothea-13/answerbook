@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心灵答案书</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #5a67d8;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+        
+        .description {
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .question-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .question-input:focus {
+            outline: none;
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.2);
+        }
+        
+        .error-message {
+            color: #e53e3e;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            min-height: 20px;
+            text-align: left;
+        }
+        
+        .btn {
+            background-color: #5a67d8;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            background-color: #4c51bf;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #edf2f7;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+        
+        .answer-container {
+            margin: 40px 0;
+            padding: 30px;
+            background-color: #f7fafc;
+            border-radius: 15px;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .answer {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: #2d3748;
+            font-style: italic;
+        }
+        
+        .book-icon {
+            font-size: 3rem;
+            color: #cbd5e0;
+            margin-bottom: 20px;
+        }
+        
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .share-btn.wechat {
+            background-color: #07c160;
+            color: white;
+        }
+        
+        .share-btn.weibo {
+            background-color: #e6162d;
+            color: white;
+        }
+        
+        .share-btn.qq {
+            background-color: #12b7f5;
+            color: white;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer {
+            margin-top: 40px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .share-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .share-btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="book-icon">📖</div>
+        <h1>心灵答案书</h1>
+        <p class="description">向这本神奇的书提问吧，它会给你一个充满智慧的答案。请确保您的问题至少包含两个汉字，且不包含不适当的内容。</p>
+        
+        <input type="text" class="question-input" placeholder="在这里输入你的问题...">
+        <div class="error-message" id="errorMessage"></div>
+        
+        <div>
+            <button class="btn" id="getAnswerBtn">获取答案</button>
+            <button class="btn btn-secondary" id="clearBtn">清除</button>
+        </div>
+        
+        <div class="answer-container">
+            <p class="answer" id="answerText">你的答案将出现在这里...</p>
+        </div>
+        
+        <div class="share-buttons">
+            <div class="share-btn wechat" id="shareWechat">
+                <span>分享到微信</span>
+            </div>
+            <div class="share-btn weibo" id="shareWeibo">
+                <span>分享到微博</span>
+            </div>
+            <div class="share-btn qq" id="shareQQ">
+                <span>分享到QQ</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2023 心灵答案书 - 让答案照亮你的心灵</p>
+    </div>
+
+    <script>
+        // 答案库
+        const answers = [
+            "跟随你的直觉，它会指引你正确的方向。",
+            "耐心等待，时机终将成熟。",
+            "有时候，最好的行动就是不行动。",
+            "相信你的选择，它比你想象的更正确。",
+            "答案就在你的心中，只是你还没有发现。",
+            "放下过去，才能拥抱未来。",
+            "真正的答案往往隐藏在问题之中。",
+            "不要急于求成，过程本身就是答案。",
+            "倾听内心的声音，它会告诉你真相。",
+            "有时候，没有答案就是最好的答案。",
+            "勇气不是没有恐惧，而是面对恐惧依然前行。",
+            "最简单的方法往往是最有效的。",
+            "改变你的视角，答案就会显现。",
+            "信任宇宙的安排，一切都在正确的轨道上。",
+            "答案需要时间沉淀，不要急于寻找。",
+            "跟随你的热情，它会带你找到答案。",
+            "有时候，问题本身就是答案。",
+            "答案不在于寻找，而在于接受。",
+            "放下控制，让事情自然发展。",
+            "答案会在最意想不到的时刻出现。",
+            "相信你的第一反应，它通常是正确的。",
+            "答案已经在你面前，只是你还没有看到。",
+            "向内寻找，而非向外。",
+            "答案需要行动来验证，而非思考。",
+            "有时候，最好的答案是学会放手。"
+        ];
+        
+        // 敏感词库
+        const sensitiveWords = [
+            "政治", "政府", "国家", "主席", "总理", "部长", "官员", "选举", "投票",
+            "政党", "政策", "法律", "法规", "宪法", "国会", "议会", "民主", "专制",
+            "独裁", "权力", "权利", "自由", "平等", "革命", "改革", "抗议", "示威",
+            "罢工", "暴力", "恐怖", "战争", "武器", "军事", "军队", "国防", "安全",
+            "情报", "间谍", "机密", "秘密", "腐败", "贪污", "贿赂", "犯罪",
+            "毒品", "赌博", "色情", "淫秽", "暴力", "血腥", "自杀", "谋杀",
+            "宗教", "信仰", "神", "佛", "主", "教派", "迷信", "邪教"
+        ];
+        
+        // DOM元素
+        const questionInput = document.querySelector('.question-input');
+        const getAnswerBtn = document.getElementById('getAnswerBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const answerText = document.getElementById('answerText');
+        const errorMessage = document.getElementById('errorMessage');
+        const shareWechat = document.getElementById('shareWechat');
+        const shareWeibo = document.getElementById('shareWeibo');
+        const shareQQ = document.getElementById('shareQQ');
+        
+        // 验证问题
+        function validateQuestion(question) {
+            // 清空错误信息
+            errorMessage.textContent = '';
+            
+            // 检查是否为空
+            if (question.trim() === '') {
+                errorMessage.textContent = '请输入你的问题';
+                return false;
+            }
+            
+            // 检查是否包含至少两个汉字
+            const chineseChars = question.match(/[\u4e00-\u9fa5]/g);
+            if (!chineseChars || chineseChars.length < 2) {
+                errorMessage.textContent = '问题必须包含至少两个汉字';
+                return false;
+            }
+            
+            // 检查是否包含敏感词
+            const containsSensitiveWord = sensitiveWords.some(word => 
+                question.toLowerCase().includes(word.toLowerCase())
+            );
+            
+            if (containsSensitiveWord) {
+                errorMessage.textContent = '问题包含不适当的内容，请重新输入';
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // 获取随机答案
+        function getRandomAnswer() {
+            const randomIndex = Math.floor(Math.random() * answers.length);
+            return answers[randomIndex];
+        }
+        
+        // 获取答案按钮点击事件
+        getAnswerBtn.addEventListener('click', function() {
+            const question = questionInput.value.trim();
+            
+            if (!validateQuestion(question)) {
+                return;
+            }
+            
+            // 显示加载状态
+            answerText.textContent = '答案之书正在思考中...';
+            
+            // 模拟思考时间
+            setTimeout(() => {
+                const answer = getRandomAnswer();
+                answerText.textContent = answer;
+            }, 1000);
+        });
+        
+        // 清除按钮点击事件
+        clearBtn.addEventListener('click', function() {
+            questionInput.value = '';
+            answerText.textContent = '你的答案将出现在这里...';
+            errorMessage.textContent = '';
+        });
+        
+        // 分享功能
+        shareWechat.addEventListener('click', function() {
+            if (answerText.textContent !== '你的答案将出现在这里...' && 
+                answerText.textContent !== '答案之书正在思考中...') {
+                alert('已复制分享链接，请粘贴到微信中分享');
+            } else {
+                alert('请先获取一个答案');
+            }
+        });
+        
+        shareWeibo.addEventListener('click', function() {
+            if (answerText.textContent !== '你的答案将出现在这里...' && 
+                answerText.textContent !== '答案之书正在思考中...') {
+                alert('即将跳转到微博分享页面');
+            } else {
+                alert('请先获取一个答案');
+            }
+        });
+        
+        shareQQ.addEventListener('click', function() {
+            if (answerText.textContent !== '你的答案将出现在这里...' && 
+                answerText.textContent !== '答案之书正在思考中...') {
+                alert('即将跳转到QQ分享页面');
+            } else {
+                alert('请先获取一个答案');
+            }
+        });
+        
+        // 按Enter键也可以获取答案
+        questionInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                getAnswerBtn.click();
+            }
+        });
+        
+        // 实时验证输入
+        questionInput.addEventListener('input', function() {
+            const question = questionInput.value.trim();
+            
+            // 只在有内容时验证
+            if (question) {
+                validateQuestion(question);
+            } else {
+                errorMessage.textContent = '';
+            }
+        });
+    </script>
+</body>
+</html>
